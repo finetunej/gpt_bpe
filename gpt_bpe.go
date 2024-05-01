@@ -1024,6 +1024,19 @@ func (encoder *GPTEncoder) encodeTokens(tokens *[]string) (encoded Tokens) {
 	return encoded
 }
 
+// Function to test if a string consists of a single, repeated character
+func isSingleChar(text string) bool {
+	if len(text) == 0 {
+		return false
+	}
+	for i := range text {
+		if text[i] != text[0] {
+			return false
+		}
+	}
+	return true
+}
+
 // StreamingEncode is a streaming Encoder. It takes an io.RuneReader and
 // returns an iterator function that will return Tokens on each call.
 func (encoder *GPTEncoder) StreamingEncode(reader io.RuneReader) func(int) *Tokens {
@@ -1034,6 +1047,7 @@ func (encoder *GPTEncoder) StreamingEncode(reader io.RuneReader) func(int) *Toke
 	if encoder.encloseEosBos || encoder.encloseBos {
 		accumulator = append(accumulator, encoder.BosToken)
 	}
+	last_word := new(string)
 	return func(desiredTokens int) *Tokens {
 		for {
 			// If we have enough tokens, then we return them, and reset the
@@ -1072,7 +1086,7 @@ func (encoder *GPTEncoder) StreamingEncode(reader io.RuneReader) func(int) *Toke
 				encodedTokens = encoder.ToBPE(fragment)
 			}
 			accumulator = append(accumulator, encodedTokens...)
-			if len(accumulator)-len(encodedTokens) > 0 {
+			if len(accumulator)-len(encodedTokens) > 0 && !(encoder.forceLeadSpace && len(*word) >= 1 && strings.TrimSpace((*word)[0:1]) == "" && last_word != nil && strings.TrimSpace(*last_word) == "" && isSingleChar(*last_word) && len(*last_word) > 1) {
 				idx := len(accumulator) - len(encodedTokens) - 1
 				for {
 					pair := TokenPair{accumulator[idx],
@@ -1096,6 +1110,7 @@ func (encoder *GPTEncoder) StreamingEncode(reader io.RuneReader) func(int) *Toke
 					}
 				}
 			}
+			last_word = word
 		}
 	}
 }
