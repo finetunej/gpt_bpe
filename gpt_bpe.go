@@ -1086,7 +1086,13 @@ func (encoder *GPTEncoder) StreamingEncode(reader io.RuneReader) func(int) *Toke
 				encodedTokens = encoder.ToBPE(fragment)
 			}
 			accumulator = append(accumulator, encodedTokens...)
-			if len(accumulator)-len(encodedTokens) > 0 && !(encoder.forceLeadSpace && len(*word) >= 1 && strings.TrimSpace((*word)[0:1]) == "" && last_word != nil && strings.TrimSpace(*last_word) == "" && isSingleChar(*last_word) && len(*last_word) > 1) {
+			if len(accumulator)-len(encodedTokens) > 0 &&
+				!(encoder.forceLeadSpace && len(*word) >= 1 &&
+					strings.TrimSpace((*word)[0:1]) == "" &&
+					last_word != nil &&
+					strings.TrimSpace(*last_word) == "" &&
+					isSingleChar(*last_word) &&
+					len(*last_word) > 1) {
 				idx := len(accumulator) - len(encodedTokens) - 1
 				for {
 					pair := TokenPair{accumulator[idx],
