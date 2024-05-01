@@ -39,19 +39,19 @@ class BPETokenizer():
     def encode(self, text: str) -> numpy.ndarray:
         encoded = text.encode("utf8")
         tokens_struct = gpt_bpe.tokenize(self.vocab_id, encoded)
-        tokens_arr_type = (ctypes.c_uint16 * tokens_struct.len)
+        tokens_arr_type = (ctypes.c_uint32 * tokens_struct.len)
         tokens_buf = tokens_arr_type.from_address(tokens_struct.tokens)
         return BackedArray([len(tokens_buf)],
-                           dtype=ctypes.c_uint16, buffer=tokens_buf,
+                           dtype=ctypes.c_uint32, buffer=tokens_buf,
                            backed=tokens_struct)
 
     def decode(self, arr: Union[numpy.ndarray, Sequence[int]]) -> str:
-        if type(arr) == numpy.ndarray and arr.dtype != ctypes.c_uint16:
-            arr = arr.astype(ctypes.c_uint16)
+        if type(arr) == numpy.ndarray and arr.dtype != ctypes.c_uint32:
+            arr = arr.astype(ctypes.c_uint32)
         elif type(arr) == BackedArray:
             pass
         elif type(arr) != numpy.ndarray:
-            arr = numpy.array(arr, dtype=ctypes.c_uint16)
+            arr = numpy.array(arr, dtype=ctypes.c_uint32)
         tokens = Tokens()
         tokens.len = len(arr)
         tokens.tokens = ctypes.c_void_p(arr.ctypes.data)

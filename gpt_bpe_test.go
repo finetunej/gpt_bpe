@@ -92,6 +92,7 @@ func init() {
 	gpt2Encoder = NewGPT2Encoder()
 	pileEncoder = NewPileEncoder()
 	clipEncoder = NewCLIPEncoder()
+	tiktokencustomEncoder := NewTikTokenCustomEncoder()
 	nerdstashV2Encoder = NewNerdstashV2Encoder()
 	Llama2Encoder = NewLlama2Encoder()
 	textBytes := handleRead("resources/frankenstein.txt")
@@ -721,7 +722,7 @@ func TestGPTEncoder_TokensReadyContext(t *testing.T) {
 }
 
 func TestUnitrimFunctionality(t *testing.T) {
-	for _, tokenizer := range []string{"clip-tokenizer", "gpt2-tokenizer", "pile-tokenizer"} {
+	for _, tokenizer := range []string{"clip-tokenizer", "gpt2-tokenizer", "pile-tokenizer", "tiktoken-custom-tokenizer"} {
 		encoderFile := fmt.Sprintf("resources/data/%s/encoder.json", tokenizer)
 		unitrimFile := fmt.Sprintf("resources/data/%s/unitrim.json", tokenizer)
 

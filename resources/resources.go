@@ -16,6 +16,11 @@ import (
 //go:embed data/gpt2-tokenizer/vocab.bpe
 //go:embed data/gpt2-tokenizer/unitrim.json
 //go:embed data/gpt2-tokenizer/specials.txt
+//go:embed data/tiktoken-custom-tokenizer/encoder.json
+//go:embed data/tiktoken-custom-tokenizer/vocab.bpe
+//go:embed data/tiktoken-custom-tokenizer/unitrim.json
+//go:embed data/tiktoken-custom-tokenizer/specials.txt
+//go:embed data/tiktoken-custom-tokenizer/special_config.json
 //go:embed data/pile-tokenizer/encoder.json
 //go:embed data/pile-tokenizer/vocab.bpe
 //go:embed data/pile-tokenizer/unitrim.json

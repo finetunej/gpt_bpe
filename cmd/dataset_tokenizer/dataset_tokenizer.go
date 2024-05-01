@@ -1141,14 +1141,14 @@ func main() {
 	showContexts := flag.Bool("show_contexts", false,
 		"show contexts as they are tokenized")
 	endOfText := flag.String("eot", "",
-		"end of text token to split texts, can be token or int16 "+
+		"end of text token to split texts, can be token or int32 "+
 			"token_id")
 	padToken := flag.String("pad", "",
 		"pad token to pad out contexts, can be <|padding|>, or an "+
-			"int16 token_id")
+			"int32 token_id")
 	boundaryToken := flag.String("boundary", "\n",
 		"boundary token to split contexts on, can be a string token "+
-			"or int16 token_id")
+			"or int32 token_id")
 	boundaryBegin := flag.Bool("boundary_begin", false,
 		"whether to treat the boundary token as a beginning token for"+
 			"a context")

@@ -658,13 +658,13 @@ func CheckFileExist(path string) bool {
 type HFConfig struct {
 	ModelId        *string `json:"omitempty"`
 	ModelType      *string `json:"model_type,omitempty"`
-	EosTokenId     *uint16 `json:"eos_token_id,omitempty"`
-	BosTokenId     *uint16 `json:"bos_token_id,omitempty"`
-	PadTokenId     *uint16 `json:"pad_token_id,omitempty"`
+	EosTokenId     *uint32 `json:"eos_token_id,omitempty"`
+	BosTokenId     *uint32 `json:"bos_token_id,omitempty"`
+	PadTokenId     *uint32 `json:"pad_token_id,omitempty"`
 	BosTokenStr    *string `json:"bos_token,omitempty"`
 	EosTokenStr    *string `json:"eos_token,omitempty"`
 	PadTokenStr    *string `json:"pad_token,omitempty"`
-	VocabSize      *uint16 `json:"vocab_size,omitempty"`
+	VocabSize      *uint32 `json:"vocab_size,omitempty"`
 	Newlinemode    *string `json:"newlinemode,omitempty"`
 	TokenizerClass *string `json:"tokenizer_class"`
 }

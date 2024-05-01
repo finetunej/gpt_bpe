@@ -23,7 +23,7 @@ const BPE_LRU_SZ = 65536
 const RUNEBUF_SZ = 16384
 const WORDCHAN_SZ = 4096
 
-type Token uint16
+type Token uint32
 type Tokens []Token
 
 type GPTEncoder struct {
@@ -96,12 +96,14 @@ func (bs BGERanks) Less(i, j int) bool {
 const SPLIT_REGEX = "'s|'t|'re|'ve|'m|'ll|'d| ?\\p{L" +
 	"}+| ?\\p{N}+| ?[^\\s\\p{L" +
 	"}\\p{N}]+|\\s+(\\S){0}|\\s+"
+
 const PUNC_REGEX = "\\p{L}[.!?;]\\p{L}"
 const REGEX_ERROR = "gpt_bpe: Fatal error compiling regular expression: %v"
 
 const VOCAB_ID_GPT2 = "gpt2-tokenizer"
 const VOCAB_ID_PILE = "pile-tokenizer"
 const VOCAB_ID_CLIP = "clip-tokenizer"
+const VOCAB_ID_TIKTOKEN_CUSTOM = "tiktoken-custom-tokenizer"
 const VOCAB_ID_NERDSTASH_V1 = "nerdstash_v1-tokenizer"
 const VOCAB_ID_NERDSTASH_V2 = "nerdstash_v2-tokenizer"
 const VOCAB_ID_LLAMA = "llama-tokenizer"
@@ -118,6 +120,11 @@ func NewPileEncoder() GPTEncoder {
 
 func NewCLIPEncoder() GPTEncoder {
 	encoder, _ := NewEncoder(VOCAB_ID_CLIP)
+	return *encoder
+}
+
+func NewTiktokenCustomEncoder() GPTEncoder {
+	encoder, _ := NewEncoder(VOCAB_ID_TIKTOKEN_CUSTOM)
 	return *encoder
 }
 
@@ -245,7 +252,7 @@ func NewEncoder(vocabId string) (*GPTEncoder, error) {
 	bpeRanks := make(map[GPTPair]float64)
 	if mergesTxt, ok := rsrcs["merges.txt"]; ok {
 		scanner := bufio.NewScanner(bytes.NewBuffer(*mergesTxt.Data))
-		idx := uint16(0)
+		idx := uint32(0)
 		firstLine := true
 		for scanner.Scan() {
 			if firstLine == true {
@@ -1203,7 +1210,7 @@ func (encoder *GPTEncoder) Decode(encoded *Tokens) (text string) {
 // DecodeBuffer
 // Decode Tokens from a byte array into a string.
 func (encoder *GPTEncoder) DecodeBuffer(encoded *[]byte) (text string) {
-	// First convert our bytearray into a uint16 `Token` array.
+	// First convert our bytearray into a uint32 `Token` array.
 	tokens := TokensFromBin(encoded)
 	// Decode our tokens into a string.
 	return encoder.Decode(tokens)
