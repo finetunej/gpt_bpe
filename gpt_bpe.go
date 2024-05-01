@@ -51,6 +51,7 @@ type GPTEncoder struct {
 	encloseBos      bool
 	encloseEos      bool
 	prefixSpace     bool
+	forceLeadSpace  bool
 	lowerCase       bool
 	endOfWord       string
 	replacements    map[string]string
@@ -159,14 +160,15 @@ func NewEncoder(vocabId string) (*GPTEncoder, error) {
 	}
 
 	specialConfig := resources.SpecialConfig{
-		PuncRunes:     nil,
-		Normalizer:    nil,
-		EncloseEosBos: false,
-		PrefixSpace:   true,
-		LowerCase:     false,
-		EndOfWord:     "",
-		DecodeExtra:   nil,
-		SplitRegex:    nil,
+		PuncRunes:      nil,
+		Normalizer:     nil,
+		EncloseEosBos:  false,
+		PrefixSpace:    true,
+		ForceLeadSpace: false,
+		LowerCase:      false,
+		EndOfWord:      "",
+		DecodeExtra:    nil,
+		SplitRegex:     nil,
 	}
 	if special, ok := (rsrcs)["special_config.json"]; ok {
 		if special.Data != nil {
@@ -380,6 +382,7 @@ func NewEncoder(vocabId string) (*GPTEncoder, error) {
 		tokenizerSpecialConfig.AddBosToken,
 		tokenizerSpecialConfig.AddEosToken,
 		specialConfig.PrefixSpace,
+		specialConfig.ForceLeadSpace,
 		specialConfig.LowerCase,
 		specialConfig.EndOfWord,
 		replacements,
@@ -791,6 +794,12 @@ func (encoder *GPTEncoder) splitWords(text string,
 
 		if !encoder.prefixSpace {
 			word = strings.TrimSpace(word)
+		}
+
+		if encoder.forceLeadSpace && strings.TrimSpace(word) == "" &&
+			len(word) > 0 && len(idxes) > idx+1 && idxes[idx+1][0] > 0 {
+			word = word[:len(word)-1]
+			idxes[idx+1][0]--
 		}
 
 		if len(word) > 0 {

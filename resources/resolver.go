@@ -671,14 +671,15 @@ type HFConfig struct {
 
 // Additional special tokenizer configuration.
 type SpecialConfig struct {
-	PuncRunes     []*string          `json:"punc_runes"`
-	Normalizer    *map[string]string `json:"normalizer"`
-	EncloseEosBos bool               `json:"enclose_eos_bos"`
-	PrefixSpace   bool               `json:"prefix_space"`
-	LowerCase     bool               `json:"lower_case"`
-	EndOfWord     string             `json:"end_of_word"`
-	DecodeExtra   *map[string]string `json:"decode_extra"`
-	SplitRegex    *string            `json:"split_regex"`
+	PuncRunes      []*string          `json:"punc_runes"`
+	Normalizer     *map[string]string `json:"normalizer"`
+	EncloseEosBos  bool               `json:"enclose_eos_bos"`
+	PrefixSpace    bool               `json:"prefix_space"`
+	ForceLeadSpace bool               `json:"force_lead_space"`
+	LowerCase      bool               `json:"lower_case"`
+	EndOfWord      string             `json:"end_of_word"`
+	DecodeExtra    *map[string]string `json:"decode_extra"`
+	SplitRegex     *string            `json:"split_regex"`
 }
 
 // TokenizerConfig file, new HF format
